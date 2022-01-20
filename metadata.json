@@ -1,0 +1,12 @@
+{
+  "name": "Clip Note",
+  "description": "Save clip contents to 4 notes with separate tags",
+  "uuid": "clip-note@eexpss.gmail.com",
+  "shell-version": [
+    "40",
+    "41",
+    "42"
+  ],
+  "url": "https://github.com/eexpress/gnome-shell-clip-note",
+  "version": 1
+}
