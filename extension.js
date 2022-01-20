@@ -17,15 +17,15 @@
  */
 
 /* exported init */
-
+imports.gi.versions.Gtk = '4.0';
 const GETTEXT_DOMAIN = 'clip-note';
-
-const { GObject, St } = imports.gi;
+const { GObject, GLib, Gio, St, Gtk } = imports.gi;
 
 const Gettext = imports.gettext.domain(GETTEXT_DOMAIN);
 const _ = Gettext.gettext;
 
 const ExtensionUtils = imports.misc.extensionUtils;
+const Me = ExtensionUtils.getCurrentExtension();
 const Main = imports.ui.main;
 const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
@@ -33,13 +33,42 @@ const PopupMenu = imports.ui.popupMenu;
 const Indicator = GObject.registerClass(
 class Indicator extends PanelMenu.Button {
     _init() {
-        super._init(0.0, _('My Shiny Indicator'));
+        super._init(0.0, _('Clip Note'));
 
         this.add_child(new St.Icon({
             icon_name: 'face-smile-symbolic',
             style_class: 'system-status-icon',
         }));
+        //~ ---------------------------------------------
+        log("------------\tClip Note\t---------------");
+        const logpath = Me.path+"/../../../clip-note";
+        //~ UserDirectory.DIRECTORY_DOWNLOAD
+        log(Me.path);
+        let f4array;
+        if(!GLib.file_test(logpath,GLib.FileTest.IS_DIR)){
+			GLib.mkdir_with_parents(logpath, 0o700);
+			f4array = ["1.web", "2.live", "3.tech", "4.other"];
+		}
+        log("------------\tClip Note\t---------------");
+		const r = GLib.file_get_contents(logpath+"/test");
+		log(r[1]);	GLib.free(r[1]);
+        //~ ---------------------------------------------
+        //~ Gtk.DirectoryList
+        //~ g_dir_open g_dir_read_name
+		const dir = Gio.File.new_for_path(logpath);
+		let fileEnum
+		try{
+		fileEnum = dir.enumerate_children('standard::name,standard::type', Gio.FileQueryInfoFlags.NONE, null);
+		} catch (e) { fileEnum = null; }
+		if (fileEnum != null) {
+			let info;
+			while ((info = fileEnum.next_file(null)))
+			//~ processFile(fileEnum.get_child(info), info);
+			log(`--->\t${info.get_name()}`);
+		}
 
+
+        //~ ---------------------------------------------
         let item = new PopupMenu.PopupMenuItem(_('Show Notification'));
         item.connect('activate', () => {
             Main.notify(_('Whatʼs up, folks?'));
