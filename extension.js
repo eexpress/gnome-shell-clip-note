@@ -52,28 +52,59 @@ class Indicator extends PanelMenu.Button {
         log("------------\tClip Note\t---------------");
 		const r = GLib.file_get_contents(logpath+"/test");
 		log(r[1]);	GLib.free(r[1]);
+
+
+        //~ ---------------------------------------------
+        const mact = new PopupMenu.PopupBaseMenuItem({reactive: false});
+		const hbox = new St.BoxLayout();
+		const butt = [];
+		//~ vbox.add_child(butt);
+		["edit-copy-symbolic", "document-new-symbolic", "tools-check-spelling-symbolic", "edit-delete-symbolic"].forEach((str, i)=>{
+			const icon = new St.Icon({ icon_name: str, style_class: "cn-iconlist" });
+			butt[i] = new St.Button({ can_focus: true, child: icon, });
+			//~ butt.actor.toggle-mode = true;
+			//~ butt.actor.checked = true;
+			//~ butt.set_checked(true);
+			butt[i].set_toggle_mode(true);
+			butt[i].connect('button-press-event', () => {
+				log(`${i} clicked. lastclick = ${lastclick}.`);
+				butt[lastclick].set_checked(false);
+				lastclick = i;
+				butt[i].set_checked(true);
+			});
+			hbox.add_child(butt[i]);
+		});
+		mact.actor.add_child(hbox);
+		let lastclick = 0;
+		butt[0].set_checked(true);
+		this.menu.addMenuItem(mact);
+        //~ ---------------------------------------------
+        //~ ---------------------------------------------
+        //~ ---------------------------------------------
         //~ ---------------------------------------------
         //~ Gtk.DirectoryList
         //~ g_dir_open g_dir_read_name
 		const dir = Gio.File.new_for_path(logpath);
-		let fileEnum
+		let fileEnum;
 		try{
-		fileEnum = dir.enumerate_children('standard::name,standard::type', Gio.FileQueryInfoFlags.NONE, null);
+			fileEnum = dir.enumerate_children('standard::name', Gio.FileQueryInfoFlags.NONE, null);
 		} catch (e) { fileEnum = null; }
 		if (fileEnum != null) {
 			let info;
-			while ((info = fileEnum.next_file(null)))
-			//~ processFile(fileEnum.get_child(info), info);
-			log(`--->\t${info.get_name()}`);
+			while ((info = fileEnum.next_file(null))){
+				const fname = info.get_name();
+				log(`--->\t${fname}`);
+				const item = new PopupMenu.PopupMenuItem(fname);
+				item.filename = fname;
+				item.style_class = 'large_text';
+				item.can_focus = true;
+				item.connect('activate', (actor) => {
+					log(`${actor.filename} click.`);
+				});
+				this.menu.addMenuItem(item);
+			}
 		}
-
-
         //~ ---------------------------------------------
-        let item = new PopupMenu.PopupMenuItem(_('Show Notification'));
-        item.connect('activate', () => {
-            Main.notify(_('Whatʼs up, folks?'));
-        });
-        this.menu.addMenuItem(item);
     }
 });
 
