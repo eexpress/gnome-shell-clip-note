@@ -61,7 +61,7 @@ class Indicator extends PanelMenu.Button {
 		//~ vbox.add_child(butt);
 		["edit-copy-symbolic", "document-new-symbolic", "tools-check-spelling-symbolic", "edit-delete-symbolic"].forEach((str, i)=>{
 			const icon = new St.Icon({ icon_name: str, style_class: "cn-iconlist" });
-			butt[i] = new St.Button({ can_focus: true, child: icon, });
+			butt[i] = new St.Button({ can_focus: true, child: icon, hover: true});
 			//~ butt.actor.toggle-mode = true;
 			//~ butt.actor.checked = true;
 			//~ butt.set_checked(true);
@@ -71,6 +71,7 @@ class Indicator extends PanelMenu.Button {
 				butt[lastclick].set_checked(false);
 				lastclick = i;
 				butt[i].set_checked(true);
+				//~ butt[i].set_hover(true);
 			});
 			hbox.add_child(butt[i]);
 		});
@@ -94,8 +95,13 @@ class Indicator extends PanelMenu.Button {
 			while ((info = fileEnum.next_file(null))){
 				const fname = info.get_name();
 				log(`--->\t${fname}`);
-				const item = new PopupMenu.PopupMenuItem(fname);
-				item.filename = fname;
+				const item = new PopupMenu.PopupMenuItem('<span foreground="blue" size="32">fname</span>');
+				item.actor.set_size(300,80);
+				//~ item.actor.create_pango_layout('<span foreground="blue" size="32">fname</span>');
+				//~ item.actor.first_child.set_markup('<span foreground="blue" size="32">fname</span>');
+				//~ set_markup
+				//~ item.actor.paint();
+				item.filename = fname;	//addition
 				item.style_class = 'large_text';
 				item.can_focus = true;
 				item.connect('activate', (actor) => {
