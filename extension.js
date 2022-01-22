@@ -3,9 +3,9 @@
  */
 
 /* exported init */
-imports.gi.versions.Gtk = '4.0';
+//~ imports.gi.versions.Gtk = '4.0';
 const GETTEXT_DOMAIN = 'clip-note';
-const { GObject, GLib, Gio, St, Gtk } = imports.gi;
+const { GObject, GLib, Gio, St } = imports.gi;
 
 const Gettext = imports.gettext.domain(GETTEXT_DOMAIN);
 const _ = Gettext.gettext;
@@ -25,25 +25,23 @@ class Indicator extends PanelMenu.Button {
 
         this.add_child(new St.Icon({ gicon: Gio.icon_new_for_string(Me.path+"/clip-note-symbolic.svg") }));
         //~ ---------------------------------------------
-        const logpath = GLib.get_home_dir()+"/.local/share/clip-note";
-        log(logprefix+logpath);
+        //~ Creat New Directory and New Files
+        const savepath = GLib.get_home_dir()+"/.local/share/clip-note";
         //~ UserDirectory.DIRECTORY_DOWNLOAD
-        let f4array;
-        if(!GLib.file_test(logpath,GLib.FileTest.IS_DIR)){
-			GLib.mkdir_with_parents(logpath, 0o700);
-			f4array = ["1.web", "2.live", "3.tech", "4.other"];
+        const init_file_array = ["1.web.javascript", "2.live.skill", "3.tech.clip", "4.other"];
+        if(!GLib.file_test(savepath,GLib.FileTest.IS_DIR)){
+			GLib.mkdir_with_parents(savepath, 0o700);
+			init_file_array.forEach((i)=>{
+				GLib.file_set_contents(savepath+"/"+i,'auto create file.\n');
+			});
 		}
-        //~ log("------------\tClip Note\t---------------");
-		//~ const r = GLib.file_get_contents(logpath+"/test");
-		//~ log(r[1]);	GLib.free(r[1]);
-
-
         //~ ---------------------------------------------
+        //~ Creat Icon List, no function now.
+        //~ CopyTo / Add / Open / Delete / Rename / Refresh list
         const mact = new PopupMenu.PopupBaseMenuItem({reactive: false});
 		const hbox = new St.BoxLayout();
 		const butt = [];
-		//~ vbox.add_child(butt);
-		["edit-copy-symbolic", "document-new-symbolic", "tools-check-spelling-symbolic", "edit-delete-symbolic"].forEach((str, i)=>{
+		["edit-copy-symbolic", "document-new-symbolic", "document-open-symbolic","tools-check-spelling-symbolic", "edit-delete-symbolic", "view-refresh-symbolic"].forEach((str, i)=>{
 			const icon = new St.Icon({ icon_name: str, icon_size: 32, style_class: "cn-icon" });
 			butt[i] = new St.Button({ can_focus: true, child: icon, toggle_mode: true });
 			//~ checked 状态由 css `:checked` 控制。瞎猜出来的。
@@ -54,16 +52,16 @@ class Indicator extends PanelMenu.Button {
 			hbox.add_child(butt[i]);
 		});
 		mact.actor.add_child(hbox);
-		//~ let lastclick = 0;
 		butt[0].set_checked(true);
 		this.menu.addMenuItem(mact);
         //~ ---------------------------------------------
         //~ ---------------------------------------------
         //~ ---------------------------------------------
-        //~ ---------------------------------------------
-        //~ Gtk.DirectoryList
-        //~ g_dir_open g_dir_read_name
-		const dir = Gio.File.new_for_path(logpath);
+        this._clipboard = St.Clipboard.get_default();
+        //~ Read files from savepath, Creat PopupMenuItem.
+        //~ Gtk.DirectoryList ??
+        //~ g_dir_open g_dir_read_name ??
+		const dir = Gio.File.new_for_path(savepath);
 		let fileEnum;
 		try{
 			fileEnum = dir.enumerate_children('standard::name', Gio.FileQueryInfoFlags.NONE, null);
@@ -78,10 +76,22 @@ class Indicator extends PanelMenu.Button {
 				item.filename = fname;	//additional properties
 				item.connect('activate', (actor) => {
 					log(`${actor.filename} click.`);
+					this._clipboard.get_text(St.ClipboardType.PRIMARY, (clipboard, text) => {
+						if(text){
+							const f = savepath+"/"+actor.filename;
+							let r = GLib.file_get_contents(f);
+							const c = new Date();
+							const t = "\n------  "+c.getFullYear()+"-"+c.getMonth()+1+"-"+c.getDate()+" "+c.getHours()+":"+c.getMinutes()+":"+c.getSeconds()+"  ------\n"+text+"\n";
+							r += t;
+							//~ log(logprefix+t);
+							GLib.file_set_contents(f,r);
+						}
+					});
 				});
 				this.menu.addMenuItem(item);
 			}
 		}
+        //~ ---------------------------------------------
         //~ ---------------------------------------------
         function split2pango(str){
 			const color = ['#00193E','#6196E6','#42CC53','#E68061','#E6617A','#D361E6'];
