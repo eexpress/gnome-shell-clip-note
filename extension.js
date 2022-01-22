@@ -45,22 +45,16 @@ class Indicator extends PanelMenu.Button {
 		//~ vbox.add_child(butt);
 		["edit-copy-symbolic", "document-new-symbolic", "tools-check-spelling-symbolic", "edit-delete-symbolic"].forEach((str, i)=>{
 			const icon = new St.Icon({ icon_name: str, icon_size: 32, style_class: "cn-icon" });
-			butt[i] = new St.Button({ can_focus: true, child: icon, hover: true});
-			//~ butt.actor.toggle-mode = true;
-			//~ butt.actor.checked = true;
-			//~ butt.set_checked(true);
-			butt[i].set_toggle_mode(true);
-			butt[i].connect('button-press-event', () => {
-				log(`${i} clicked. lastclick = ${lastclick}.`);
-				butt[lastclick].set_checked(false);
-				lastclick = i;
-				butt[i].set_checked(true);
-				//~ butt[i].set_hover(true);
+			butt[i] = new St.Button({ can_focus: true, child: icon, toggle_mode: true });
+			//~ checked 状态由 css `:checked` 控制。瞎猜出来的。
+			butt[i].connect('clicked', (self) => {
+				butt.forEach((self)=>{ self.checked = false; });
+				self.checked = true;
 			});
 			hbox.add_child(butt[i]);
 		});
 		mact.actor.add_child(hbox);
-		let lastclick = 0;
+		//~ let lastclick = 0;
 		butt[0].set_checked(true);
 		this.menu.addMenuItem(mact);
         //~ ---------------------------------------------
