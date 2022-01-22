@@ -1,3 +1,5 @@
 /* Add your custom extension styling here */
 
-.cn-iconlist{ padding: 1em; spacing: 1em;}
+.cn-icon { padding: 1em; spacing: 1em; }
+
+.ct-text { margin: 0.2em; font-size: 1.5em; }
