@@ -2,6 +2,8 @@
 
 .cn-icon { padding: 1em; spacing: 1em; }
 
-.ct-text { margin: 0.2em; font-size: 1.5em; }
+.cn-text { margin: 0.2em; font-size: 1.5em; }
 
-:checked { border: 0.4em solid #999999; border-radius: 1em; background: #404040; }
+:checked { border: 0.4em solid #999999; border-radius: 1em; background: #414040; }
+
+:hover { background: #404040; }
