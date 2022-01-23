@@ -42,7 +42,7 @@ class Indicator extends PanelMenu.Button {
 		const hbox = new St.BoxLayout();
 		const butt = [];
 		//~ ["edit-copy-symbolic", "document-new-symbolic", "document-open-symbolic","tools-check-spelling-symbolic", "edit-delete-symbolic", "view-refresh-symbolic"].forEach((str, i)=>{
-		["edit-copy-symbolic", "view-refresh-symbolic"].forEach((str, i)=>{
+		["edit-copy-symbolic", "folder-open-symbolic", "view-refresh-symbolic"].forEach((str, i)=>{
 			const icon = new St.Icon({ icon_name: str, icon_size: 32, style_class: "cn-icon" });
 			butt[i] = new St.Button({ can_focus: true, child: icon, toggle_mode: true });
 			butt[i].name = str;
@@ -56,9 +56,12 @@ class Indicator extends PanelMenu.Button {
 						if(j.filename) j.destroy();	//PopupMenuItem
 					});
 					refresh_menu(this, ls(savepath));
-					self.checked = false;
-					butt[0].set_checked(true);
 				}
+				if(self.name == "folder-open-symbolic"){
+					let [, stdout, , status] = GLib.spawn_command_line_sync('xdg-open '+savepath);
+				}
+				self.checked = false;
+				butt[0].set_checked(true);
 			});
 			hbox.add_child(butt[i]);
 		});
@@ -81,11 +84,8 @@ class Indicator extends PanelMenu.Button {
 					owner._clipboard.get_text(St.ClipboardType.PRIMARY, (clipboard, text) => {
 						if(text){
 							const f = savepath+"/"+actor.filename;
-				//~ const r = GLib.ByteArray.toString(GLib.file_get_contents(f)[1]); //Error Content
-	//~ Some code called array.toString() on a Uint8Array instance. Previously this would have interpreted the bytes of the array as a string, but that is nonstandard. In the future this will return the bytes as comma-separated digits. For the time being, the old behavior has been preserved, but please fix your code anyway to explicitly call ByteArray.toString(array).
-	//~ (Note that array.toString() may have been called implicitly.)
-	//~ 0 _init/</</<() ["/home/eexpss/.local/share/gnome-shell/extensions/clip-note@eexpss.gmail.com/extension.js":76:16]
-							const r = GLib.file_get_contents(f)[1];
+							const ByteArray = imports.byteArray;
+							const r = ByteArray.toString(GLib.file_get_contents(f)[1]);
 							const c = new Date();
 							const t = r+"\n------  "+c.getFullYear()+"-"+c.getMonth()+1+"-"+c.getDate()+" "+c.getHours()+":"+c.getMinutes()+":"+c.getSeconds()+"  ------\n"+text+"\n";
 							GLib.file_set_contents(f,t);
