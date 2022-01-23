@@ -43,7 +43,7 @@ class Indicator extends PanelMenu.Button {
 		const toggle_butt = ["edit-copy-symbolic", "document-new-symbolic"];	//can toggle/checked
 		["edit-copy-symbolic", "folder-open-symbolic", "document-new-symbolic", "view-refresh-symbolic"].forEach((str, i)=>{
 			const icon = new St.Icon({ icon_name: str, icon_size: 32, style_class: "cn-icon" });
-			butt[i] = new St.Button({ can_focus: true, child: icon });
+			butt[i] = new St.Button({ child: icon });
 			if(toggle_butt.indexOf(str)>-1){butt[i].set_toggle_mode = true;};
 			butt[i].name = str;
 			butt[i].set_track_hover(true);
@@ -60,10 +60,10 @@ class Indicator extends PanelMenu.Button {
 				};
 			});
 			butt[i].connect('clicked', (self) => {
-				log(logprefix+self.name);
 				switch(self.name){
 					case "edit-copy-symbolic":
 						input.set_reactive(false);
+						input.style_class = "cn-text";
 						butt.forEach((self)=>{ self.checked = false; });
 						self.checked = true;
 						break;
@@ -76,7 +76,8 @@ class Indicator extends PanelMenu.Button {
 						self.checked = true;
 						input.text = "";
 						input.hint_text = _("Input filename use dots split tags.");
-						input.actor.grab_key_focus();
+						input.style_class = "cn-input-active";
+						//~ input.actor.grab_key_focus();
 //Usage of object.actor is deprecated for St_Entry ！！
 //~ https://github.com/phocean/TopIcons-plus/issues/137
 						break;
@@ -98,7 +99,6 @@ class Indicator extends PanelMenu.Button {
 		const input = new St.Entry({
 			name: 'input',
 			style_class: 'cn-text',
-			can_focus: false,
 			x_expand: true,
 		});
 		input.set_reactive(false);
@@ -110,6 +110,7 @@ class Indicator extends PanelMenu.Button {
 			}	//"document-new-symbolic"
 			butt[0].set_checked(true);
 			butt[2].set_checked(false);
+			input.style_class = "cn-text";
 		});
 		minput.add(input);
 		this.menu.addMenuItem(minput);
@@ -123,11 +124,10 @@ class Indicator extends PanelMenu.Button {
 		};
          //~ ---------------------------------------------
          function add_menu(owner,fname){
-			const item = new PopupMenu.PopupMenuItem(fname, {style_class:'cn-text', can_focus:true});
+			const item = new PopupMenu.PopupMenuItem(fname, {style_class:'cn-text'});
 			item.label.clutter_text.set_markup(split2pango(fname));
 			item.filename = fname;	//additional properties
 			item.connect('activate', (actor) => {
-				log(logprefix+actor.filename+"click.");
 				owner._clipboard.get_text(St.ClipboardType.PRIMARY, (clipboard, text) => {
 					if(text){
 						const f = savepath+"/"+actor.filename;
