@@ -4,4 +4,4 @@
 
 .ct-text { margin: 0.2em; font-size: 1.5em; }
 
-:checked { border: 4px solid #999999; border-radius: 1em; }
+:checked { border: 0.4em solid #999999; border-radius: 1em; background: #404040; }
