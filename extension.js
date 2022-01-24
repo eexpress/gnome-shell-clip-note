@@ -64,7 +64,7 @@ class Indicator extends PanelMenu.Button {
 						virtual_click(self);
 						break;
 					case "open":
-						let [, stdout, , status] = GLib.spawn_command_line_sync('xdg-open '+savepath);
+						GLib.spawn_command_line_async('xdg-open '+savepath);
 						break;
 					case "refresh":
 						this.menu._getMenuItems().forEach((j)=>{	//_getMenuItems()看源码找出来的。删除全部文件的 PopupMenuItem
@@ -107,9 +107,10 @@ class Indicator extends PanelMenu.Button {
 		});
 		minput.add(input);
 		this.menu.addMenuItem(minput);
+        //~ =============================================
+        //~ Read files from savepath, Creat PopupMenuItem.
 		//~ ---------------------------------------------
         this._clipboard = St.Clipboard.get_default();
-        //~ Read files from savepath, Creat PopupMenuItem.
 		refresh_menu(this, ls(savepath));
         //~ ---------------------------------------------
 		function refresh_menu(owner, list){
@@ -117,8 +118,24 @@ class Indicator extends PanelMenu.Button {
 		};
          //~ ---------------------------------------------
          function add_menu(owner,fname){
-			const item = new PopupMenu.PopupMenuItem(fname, {style_class:'cn-text'});
-			item.label.clutter_text.set_markup(split2pango(fname));
+			const item = new PopupMenu.PopupBaseMenuItem({style_class:'cn-text'});
+			const icon0 = new St.Icon({ icon_name: "document-open-symbolic", icon_size: 24 });
+			const icon1 = new St.Icon({ icon_name: "document-send-symbolic", icon_size: 24 });
+			const butt = new St.Button({ child: icon1, track_hover: true });
+			const lbl = new St.Label();
+			const hbox = new St.BoxLayout();
+			hbox.add_child(butt);hbox.add_child(lbl);
+			lbl.clutter_text.set_markup(split2pango(fname));
+			item.add(hbox);
+			butt.connect('clicked', (self) => {
+				GLib.spawn_command_line_async('xdg-open '+savepath+"/"+butt.filename);
+			});
+			butt.connect('style-changed', (self) => {
+				log(logprefix+" x "+self.filename+" x "+self.hover);
+				if(self.hover) self.child = icon0; else self.child = icon1;
+			});
+
+			butt.filename = fname;	//additional properties
 			item.filename = fname;	//additional properties
 			item.connect('activate', (actor) => {
 				owner._clipboard.get_text(St.ClipboardType.PRIMARY, (clipboard, text) => {
