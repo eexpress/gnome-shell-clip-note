@@ -96,8 +96,8 @@ class Indicator extends PanelMenu.Button {
 //~ https://github.com/phocean/TopIcons-plus/issues/137
         //~ ---------------------------------------------
 		const minput = new PopupMenu.PopupBaseMenuItem({reactive: false});
-		const input = new St.Entry({ name: 'input', style_class: 'cn-text', x_expand: true });
-		input.set_reactive(false);	//Clutter.Actor
+		const input = new St.Entry({ name: 'input', style_class: 'cn-text', x_expand: true, can_focus: true, reactive: false});
+//~ clutter_input_focus_set_cursor_location: assertion 'clutter_input_focus_is_focused (focus)' failed	第一次显示tip时出现。
 		input.clutter_text.connect('activate', (actor) => {
 			if(butt[2].checked){
 				add_menu(this, input.text);
