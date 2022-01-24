@@ -48,14 +48,12 @@ class Indicator extends PanelMenu.Button {
 		const hbox = new St.BoxLayout();
 		const butt = [];
 		gname.forEach((str, i)=>{
-			const icon = new St.Icon({ icon_name: gicon[i], icon_size: 32, style_class: "cn-icon", track_hover: true });
+			const icon = new St.Icon({ icon_name: gicon[i], icon_size: 30, style_class: "cn-icon", track_hover: true });
 			butt[i] = new St.Button({ child: icon, toggle_mode: gtoggle[i] });
 			butt[i].name = str;	//additional properties
 			//~ checked 状态由 css `:checked` 控制。瞎猜出来的。
 			butt[i].connect('style-changed', (self) => {
-				if(self.hover && ! input.get_reactive() ){
-					input.text = gtip[i];
-				};
+				hover_text(self, gtip[i]);
 			});
 			butt[i].connect('clicked', (self) => {
 				switch(self.name){
@@ -81,14 +79,15 @@ class Indicator extends PanelMenu.Button {
 		this.menu.addMenuItem(mact);
         //~ ---------------------------------------------
         function virtual_click(self){
-			const isnew = (self === butt[2]) ? true : false;
-			input.set_reactive(isnew);
+			const isAddNewFile = (self === butt[2]) ? true : false;
+			input.set_reactive(isAddNewFile);
 			butt.forEach((self)=>{ self.checked = false; });
 			self.checked = true;
-			input.style_class = isnew ? "cn-input-active" : "cn-text";
-			if(isnew){
+			input.style_class = isAddNewFile ? "cn-input-active" : "cn-text";
+			input.hint_text = "";
+			if(isAddNewFile){
 				input.text = "";
-				input.hint_text = _("Input filename use dots split tags.");
+				input.hint_text = _("Input filename here.");
 			}
 		};
 			//~ input.actor.grab_key_focus();
@@ -116,22 +115,33 @@ class Indicator extends PanelMenu.Button {
 		function refresh_menu(owner, list){
 			list.forEach((fname)=>{ add_menu(owner,fname); });
 		};
-         //~ ---------------------------------------------
-         function add_menu(owner,fname){
+        //~ ---------------------------------------------
+        function hover_text(self, str){
+			if(!input.get_reactive()){
+				if(self.hover) input.text = str;
+				else input.text = "";
+			}
+		};
+        //~ ---------------------------------------------
+        function add_menu(owner,fname){
 			const item = new PopupMenu.PopupBaseMenuItem({style_class:'cn-text'});
 			const icon0 = new St.Icon({ icon_name: "document-open-symbolic", icon_size: 24 });
-			const icon1 = new St.Icon({ icon_name: "document-send-symbolic", icon_size: 24 });
+			const icon1 = new St.Icon({ icon_name: "view-app-grid-symbolic", icon_size: 24 });
 			const butt = new St.Button({ child: icon1, track_hover: true });
 			const lbl = new St.Label();
 			const hbox = new St.BoxLayout();
 			hbox.add_child(butt);hbox.add_child(lbl);
 			lbl.clutter_text.set_markup(split2pango(fname));
 			item.add(hbox);
+			item.set_track_hover = true;
+			item.connect('style-changed', (self) => {
+				hover_text(self,_("Copy to ")+butt.filename);
+			});
 			butt.connect('clicked', (self) => {
 				GLib.spawn_command_line_async('xdg-open '+savepath+"/"+butt.filename);
 			});
 			butt.connect('style-changed', (self) => {
-				log(logprefix+" x "+self.filename+" x "+self.hover);
+				hover_text(self,_("Open ")+butt.filename);
 				if(self.hover) self.child = icon0; else self.child = icon1;
 			});
 
