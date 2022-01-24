@@ -129,8 +129,7 @@ class Indicator extends PanelMenu.Button {
 						}
 						const ByteArray = imports.byteArray;
 						const r = ByteArray.toString(GLib.file_get_contents(f)[1]);
-						const c = new Date();
-						const t = r+"\n------  "+c.getFullYear()+"-"+c.getMonth()+1+"-"+c.getDate()+" "+c.getHours()+":"+c.getMinutes()+":"+c.getSeconds()+"  ------\n"+text+"\n";
+						const t = r+"\n------  "+GLib.DateTime.new_now_local().format("%F %T")+"  ------\n"+text+"\n";
 						GLib.file_set_contents(f,t);
 					}
 				});
