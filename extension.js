@@ -50,7 +50,7 @@ class Indicator extends PanelMenu.Button {
 		gname.forEach((str, i)=>{
 			const icon = new St.Icon({ icon_name: gicon[i], icon_size: 32, style_class: "cn-icon", track_hover: true });
 			butt[i] = new St.Button({ child: icon, toggle_mode: gtoggle[i] });
-			butt[i].name = str;
+			butt[i].name = str;	//additional properties
 			//~ checked 状态由 css `:checked` 控制。瞎猜出来的。
 			butt[i].connect('style-changed', (self) => {
 				if(self.hover && ! input.get_reactive() ){
@@ -96,14 +96,10 @@ class Indicator extends PanelMenu.Button {
 //~ https://github.com/phocean/TopIcons-plus/issues/137
         //~ ---------------------------------------------
 		const minput = new PopupMenu.PopupBaseMenuItem({reactive: false});
-		const input = new St.Entry({
-			name: 'input',
-			style_class: 'cn-text',
-			x_expand: true,
-		});
-		input.set_reactive(false);
+		const input = new St.Entry({ name: 'input', style_class: 'cn-text', x_expand: true });
+		input.set_reactive(false);	//Clutter.Actor
 		input.clutter_text.connect('activate', (actor) => {
-			if(butt[2].checked){	//"document-new-symbolic"
+			if(butt[2].checked){
 				add_menu(this, input.text);
 				input.text = _("%s has been added virtually.").format(input.text);
 			}
