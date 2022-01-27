@@ -92,9 +92,8 @@ class Indicator extends PanelMenu.Button {
 		};
 
 		const minput = new PopupMenu.PopupBaseMenuItem({reactive: false});
-		const input = new St.Entry({ name: 'input', style_class: 'cn-text', x_expand: true, can_focus: true, reactive: false});
+		const input = new St.Entry({ style_class: 'cn-text', x_expand: true, can_focus: true, reactive: false});
 		input.height = input.height*2;
-//~ clutter_input_focus_set_cursor_location: assertion 'clutter_input_focus_is_focused (focus)' failed  第一次显示tip时（写入时）出现。
 		input.clutter_text.connect('activate', (actor) => {
 			if(butt[2].checked){
 				add_menu(this, input.text);
