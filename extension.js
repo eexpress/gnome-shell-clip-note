@@ -3,7 +3,6 @@
  */
 
 /* exported init */
-//~ imports.gi.versions.Gtk = '4.0';
 const GETTEXT_DOMAIN = 'clip-note';
 const { GObject, GLib, Gio, St } = imports.gi;
 
@@ -43,13 +42,13 @@ class Indicator extends PanelMenu.Button {
         const gicon = ["edit-copy-symbolic", "folder-open-symbolic", "document-new-symbolic", "view-refresh-symbolic"];
         const gtoggle = [true, false, true, false];
         const gtip = [_("Copy Clip to file below"), _("Open Notes directory"), _("Add a new file"), _("Refresh file list")];
-        //~ ---------------------------------------------
+
         const mact = new PopupMenu.PopupBaseMenuItem({reactive: false});
 		const hbox = new St.BoxLayout();
 		const butt = [];
 		gname.forEach((str, i)=>{
 			const icon = new St.Icon({ icon_name: gicon[i], icon_size: 30, style_class: "cn-icon", track_hover: true });
-			butt[i] = new St.Button({ child: icon, toggle_mode: gtoggle[i] });
+			butt[i] = new St.Button({ child: icon, toggle_mode: gtoggle[i], style_class:'cn' });
 			butt[i].name = str;	//additional properties
 			//~ checked 状态由 css `:checked` 控制。瞎猜出来的。
 			butt[i].connect('style-changed', (self) => {
@@ -77,7 +76,7 @@ class Indicator extends PanelMenu.Button {
 		mact.actor.add_child(hbox);
 		butt[0].set_checked(true);
 		this.menu.addMenuItem(mact);
-        //~ ---------------------------------------------
+
         function virtual_click(self){
 			const isAddNewFile = (self === butt[2]) ? true : false;
 			input.set_reactive(isAddNewFile);
@@ -90,13 +89,10 @@ class Indicator extends PanelMenu.Button {
 				input.hint_text = _("Input filename here.");
 			}
 		};
-			//~ input.actor.grab_key_focus();
-//Usage of object.actor is deprecated for St_Entry ！！
-//~ https://github.com/phocean/TopIcons-plus/issues/137
-        //~ ---------------------------------------------
+
 		const minput = new PopupMenu.PopupBaseMenuItem({reactive: false});
 		const input = new St.Entry({ name: 'input', style_class: 'cn-text', x_expand: true, can_focus: true, reactive: false});
-//~ clutter_input_focus_set_cursor_location: assertion 'clutter_input_focus_is_focused (focus)' failed	第一次显示tip时出现。
+//~ clutter_input_focus_set_cursor_location: assertion 'clutter_input_focus_is_focused (focus)' failed	第一次显示tip时（写入时）出现。
 		input.clutter_text.connect('activate', (actor) => {
 			if(butt[2].checked){
 				add_menu(this, input.text);
@@ -111,23 +107,23 @@ class Indicator extends PanelMenu.Button {
 		//~ ---------------------------------------------
         this._clipboard = St.Clipboard.get_default();
 		refresh_menu(this, ls(savepath));
-        //~ ---------------------------------------------
+
 		function refresh_menu(owner, list){
 			list.forEach((fname)=>{ add_menu(owner,fname); });
 		};
-        //~ ---------------------------------------------
+
         function hover_text(self, str){
 			if(!input.get_reactive()){
 				if(self.hover) input.text = str;
 				else input.text = "";
 			}
 		};
-        //~ ---------------------------------------------
+
         function add_menu(owner,fname){
 			const item = new PopupMenu.PopupBaseMenuItem({style_class:'cn-text'});
 			const icon0 = new St.Icon({ icon_name: "document-open-symbolic", icon_size: 24 });
 			const icon1 = new St.Icon({ icon_name: "view-app-grid-symbolic", icon_size: 24 });
-			const butt = new St.Button({ child: icon1, track_hover: true });
+			const butt = new St.Button({ child: icon1, track_hover: true, style_class:'cn'});
 			const lbl = new St.Label();
 			const hbox = new St.BoxLayout();
 			hbox.add_child(butt);hbox.add_child(lbl);
@@ -163,7 +159,7 @@ class Indicator extends PanelMenu.Button {
 			});
 			owner.menu.addMenuItem(item);
 		 };
-         //~ ---------------------------------------------
+
         function ls(path){	//return an array of files
 			const dir = Gio.File.new_for_path(path);
 			let fileEnum;
@@ -177,7 +173,7 @@ class Indicator extends PanelMenu.Button {
 			}
 			return r;
 		};
-        //~ ---------------------------------------------
+
         function split2pango(str){
 			const color = ['#00193E','#6196E6','#42CC53','#E68061','#E6617A','#D361E6'];
 			const seg = str.split('.');
@@ -187,7 +183,6 @@ class Indicator extends PanelMenu.Button {
 			});
 			return out;
 		};
-        //~ ---------------------------------------------
     }
 });
 

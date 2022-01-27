@@ -4,8 +4,8 @@
 
 .cn-text { margin: 0.2em; font-size: 1.5em; }
 
-:checked { border: 0.4em solid #999999; border-radius: 1em; background: #414040; }
+.cn:checked { border: 0.4em solid #999999; border-radius: 1em; background: #414040; }
 
-:hover { background: #404040; }
+.cn:hover { background: #404040; }
 
 .cn-input-active { margin: 0.2em; font-size: 1.5em; border: 1px solid #FF8989; }
