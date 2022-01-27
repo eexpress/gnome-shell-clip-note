@@ -135,7 +135,7 @@ class Indicator extends PanelMenu.Button {
 				hover_text(self,_("Copy to ")+butt.filename);
 			});
 			butt.connect('clicked', (self) => {
-				GLib.spawn_command_line_async('xdg-open '+savepath+"/"+butt.filename);
+				GLib.spawn_command_line_async('xdg-open "'+savepath+"/"+butt.filename+'"');
 			});
 			butt.connect('style-changed', (self) => {
 				hover_text(self,_("Open ")+butt.filename);
