@@ -15,7 +15,7 @@ const Main = imports.ui.main;
 const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
 
-const logprefix = "===clip-note===>";
+function lg(s){log("==="+Me.uuid.split('@')[0]+"===>"+s)};
 
 const Indicator = GObject.registerClass(
 class Indicator extends PanelMenu.Button {
@@ -53,7 +53,7 @@ class Indicator extends PanelMenu.Button {
 			//~ checked 状态由 css `:checked` 控制。瞎猜出来的。
 			butt[i].connect('style-changed', (self) => {
 				hover_text(self, gtip[i]);
-			});
+			});	//Actor also have `leave-event`/`enter-event` signal
 			butt[i].connect('clicked', (self) => {
 				switch(self.name){
 					case "copy":
@@ -197,6 +197,7 @@ class Extension {
 	enable() {
 		this._indicator = new Indicator();
 		Main.panel.addToStatusArea(this._uuid, this._indicator);
+		lg("start");
 	}
 
 	disable() {
