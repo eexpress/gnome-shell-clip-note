@@ -1,10 +1,10 @@
 /* Add your custom extension styling here */
 
-.cn-icon { padding: 1em; spacing: 1em; }
+.cn-icon { margin: 0.5em 1.5em 0.5em 1.5em; }
 
 .cn-text { margin: 0.2em; font-size: 1.5em; }
 
-.cn:checked { border: 0.4em solid #999999; border-radius: 1em; background: #414040; }
+.cn:checked { border: 0.1em solid #999999; border-radius: 0.5em; background: #414040; }
 
 .cn:hover { background: #404040; }
 
