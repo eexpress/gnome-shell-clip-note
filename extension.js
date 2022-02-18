@@ -9,7 +9,7 @@ const PopupMenu = imports.ui.popupMenu;
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
 const _ = Gettext.gettext;
 
-const debug = true;
+const debug = false;
 function lg(s){ if(debug) log("==="+Me.metadata['gettext-domain']+"===>"+s); }
 
 const Indicator = GObject.registerClass(
