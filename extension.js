@@ -1,13 +1,4 @@
-/* extension.js
- * SPDX-License-Identifier: GPL-2.0-or-later
- */
-
-/* exported init */
-const GETTEXT_DOMAIN = 'clip-note';
 const { GObject, GLib, Gio, St } = imports.gi;
-
-const Gettext = imports.gettext.domain(GETTEXT_DOMAIN);
-const _ = Gettext.gettext;
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
@@ -15,12 +6,16 @@ const Main = imports.ui.main;
 const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
 
-function lg(s){log("==="+Me.uuid.split('@')[0]+"===>"+s)};
+const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
+const _ = Gettext.gettext;
+
+const debug = true;
+function lg(s){ if(debug) log("==="+Me.metadata['gettext-domain']+"===>"+s); }
 
 const Indicator = GObject.registerClass(
 class Indicator extends PanelMenu.Button {
 	_init() {
-		super._init(0.0, _('Clip Note'));
+		super._init(0.0, _(Me.metadata['name']));
 
 		this.add_child(new St.Icon({ gicon: Gio.icon_new_for_string(Me.path+"/clip-note-symbolic.svg") }));
 		//~ =============================================
@@ -191,7 +186,7 @@ class Extension {
 	constructor(uuid) {
 		this._uuid = uuid;
 
-		ExtensionUtils.initTranslations(GETTEXT_DOMAIN);
+		ExtensionUtils.initTranslations();
 	}
 
 	enable() {
@@ -203,6 +198,7 @@ class Extension {
 	disable() {
 		this._indicator.destroy();
 		this._indicator = null;
+		lg("stop");
 	}
 }
 
