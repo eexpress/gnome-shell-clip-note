@@ -1,0 +1,55 @@
+# Chinese translations for PACKAGE package
+# PACKAGE 软件包的简体中文翻译.
+# Copyright (C) 2022 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# eexpss <eexpss@gmail.com>, 2022.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-01-27 11:50+0800\n"
+"PO-Revision-Date: 2022-01-27 11:50+0800\n"
+"Last-Translator: eexpss <eexpss@gmail.com>\n"
+"Language-Team: Chinese (simplified) <i18n-zh@googlegroups.com>\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: extension.js:23
+msgid "Clip Note"
+msgstr "剪贴板摘录"
+
+#: extension.js:44
+msgid "Copy Clip to file below"
+msgstr "剪贴板摘录到下面文件"
+
+#: extension.js:44
+msgid "Open Notes directory"
+msgstr "打开笔记的目录"
+
+#: extension.js:44
+msgid "Add a new file"
+msgstr "增加一个笔记"
+
+#: extension.js:44
+msgid "Refresh file list"
+msgstr "刷新笔记列表"
+
+#: extension.js:89
+msgid "Input filename here."
+msgstr "在此输入文件名"
+
+#: extension.js:100
+#, javascript-format
+msgid "%s has been added virtually."
+msgstr "已虚拟的增加了 %s"
+
+#: extension.js:135
+msgid "Copy to "
+msgstr "摘录到 "
+
+#: extension.js:141
+msgid "Open "
+msgstr "打开 "
