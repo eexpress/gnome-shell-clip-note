@@ -2,6 +2,10 @@
 
 # gnome扩展：剪贴板摘录
 
+[<img alt="" height="80" src="https://raw.githubusercontent.com/andyholmes/gnome-shell-extensions-badge/master/get-it-on-ego.svg?sanitize=true">](https://extensions.gnome.org/extension/4774/clip-note/)
+
+---
+
 - Save clip contents (`ClipboardType.PRIMARY` means mouse selected text) to multiple notes with separate tags.
 - Notes locate at `~/.local/share/clip-note/`. *You can soft link this directory to anywhere as you wish.*
 - Dots in filename means splited tags.
