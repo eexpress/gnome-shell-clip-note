@@ -21,6 +21,12 @@ const Indicator = GObject.registerClass(class Indicator extends PanelMenu.Button
 		this.add_child(new St.Icon({
 			gicon : Gio.icon_new_for_string(Me.path + '/clip-note-symbolic.svg')
 		}));
+
+		//~ this.itemx = new PopupMenu.PopupBaseMenuItem({ activate: false });
+		//~ const Slider = imports.ui.slider;
+        //~ this._slider = new Slider.Slider(0);
+        //~ this.itemx.add_child(this._slider);
+        //~ this.menu.addMenuItem(this.itemx);
 		//~ =============================================
 		//~ Creat New Directory and New Files
 		//~ ---------------------------------------------
