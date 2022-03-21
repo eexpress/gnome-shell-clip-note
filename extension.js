@@ -1,13 +1,13 @@
 const { GObject, GLib, Gio, St } = imports.gi;
 
 const ExtensionUtils = imports.misc.extensionUtils;
-const Me = ExtensionUtils.getCurrentExtension();
-const Main = imports.ui.main;
-const PanelMenu = imports.ui.panelMenu;
-const PopupMenu = imports.ui.popupMenu;
+const Me			 = ExtensionUtils.getCurrentExtension();
+const Main			 = imports.ui.main;
+const PanelMenu		 = imports.ui.panelMenu;
+const PopupMenu		 = imports.ui.popupMenu;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
-const _ = Gettext.gettext;
+const _		  = Gettext.gettext;
 
 const debug = false;
 function lg(s) {
@@ -19,14 +19,14 @@ const Indicator = GObject.registerClass(class Indicator extends PanelMenu.Button
 		super._init(0.0, _(Me.metadata['name']));
 
 		this.add_child(new St.Icon({
-			gicon : Gio.icon_new_for_string(Me.path + '/clip-note-symbolic.svg')
+			gicon : Gio.icon_new_for_string(Me.path + '/clip-note-symbolic.svg'), style_class : 'system-status-icon'
 		}));
 
 		//~ this.itemx = new PopupMenu.PopupBaseMenuItem({ activate: false });
 		//~ const Slider = imports.ui.slider;
-        //~ this._slider = new Slider.Slider(0);
-        //~ this.itemx.add_child(this._slider);
-        //~ this.menu.addMenuItem(this.itemx);
+		//~ this._slider = new Slider.Slider(0);
+		//~ this.itemx.add_child(this._slider);
+		//~ this.menu.addMenuItem(this.itemx);
 		//~ =============================================
 		//~ Creat New Directory and New Files
 		//~ ---------------------------------------------
@@ -50,9 +50,9 @@ const Indicator = GObject.registerClass(class Indicator extends PanelMenu.Button
 			'view-refresh-symbolic'
 		];
 		const gtoggle = [ true, false, true, false ];
-		const gtip = [
-			_('Copy Clip to file below'), _('Open Notes directory'),
-			_('Add a new file'), _('Refresh file list')
+		const gtip	  = [
+			   _('Copy Clip to file below'), _('Open Notes directory'),
+			   _('Add a new file'), _('Refresh file list')
 		];
 
 		const mact = new PopupMenu.PopupBaseMenuItem({ reactive : false });
@@ -65,13 +65,13 @@ const Indicator = GObject.registerClass(class Indicator extends PanelMenu.Button
 				style_class : 'cn-icon',
 				track_hover : true
 			});
-			butt[i] = new St.Button(
-				{ child : icon, toggle_mode : gtoggle[i], style_class : 'cn' });
-			butt[i].name = str; // additional properties
+			butt[i]	   = new St.Button(
+				   { child : icon, toggle_mode : gtoggle[i], style_class : 'cn' });
+			butt[i].name = str;	 // additional properties
 			//~ checked 状态由 css `:checked` 控制。瞎猜出来的。
 			butt[i].connect('style-changed', (self) => {
 				hover_text(self, gtip[i]);
-			}); // Actor also have `leave-event`/`enter-event` signal
+			});	 // Actor also have `leave-event`/`enter-event` signal
 			butt[i].connect('clicked', (self) => {
 				switch (self.name) {
 				case 'copy':
@@ -83,8 +83,8 @@ const Indicator = GObject.registerClass(class Indicator extends PanelMenu.Button
 					break;
 				case 'refresh':
 					this.menu._getMenuItems().forEach(
-						(j) => { //_getMenuItems()看源码找出来的。删除全部文件的
-								 // PopupMenuItem
+						(j) => {  //_getMenuItems()看源码找出来的。删除全部文件的
+								  // PopupMenuItem
 							if (j.filename) j.destroy();
 						});
 					refresh_menu(this, ls(savepath));
@@ -103,23 +103,23 @@ const Indicator = GObject.registerClass(class Indicator extends PanelMenu.Button
 			butt.forEach((self) => {
 				self.checked = false;
 			});
-			self.checked = true;
+			self.checked	  = true;
 			input.style_class = isAddNewFile ? 'cn-input-active' : 'cn-text';
-			input.hint_text = '';
+			input.hint_text	  = '';
 			if (isAddNewFile) {
-				input.text = '';
+				input.text		= '';
 				input.hint_text = _('Input filename here.');
 				input.clutter_text.grab_key_focus();
 			}
 		};
 
 		const minput = new PopupMenu.PopupBaseMenuItem({ reactive : false });
-		const input = new St.Entry({
-			style_class : 'cn-text',
-			x_expand : true,
-			can_focus : true,
-			reactive : false
-		});
+		const input	 = new St.Entry({
+			 style_class : 'cn-text',
+			 x_expand : true,
+			 can_focus : true,
+			 reactive : false
+		 });
 		input.height = input.height * 2;
 		input.clutter_text.connect('activate', (actor) => {
 			if (butt[2].checked) {
@@ -152,12 +152,12 @@ const Indicator = GObject.registerClass(class Indicator extends PanelMenu.Button
 		};
 
 		function add_menu(owner, fname) {
-			const item = new PopupMenu.PopupBaseMenuItem({ style_class : 'cn-text' });
+			const item	= new PopupMenu.PopupBaseMenuItem({ style_class : 'cn-text' });
 			const icon0 = new St.Icon({ icon_name : 'document-open-symbolic', icon_size : 24 });
 			const icon1 = new St.Icon({ icon_name : 'view-app-grid-symbolic', icon_size : 24 });
-			const butt = new St.Button(
-				{ child : icon1, track_hover : true, style_class : 'cn' });
-			const lbl = new St.Label();
+			const butt	= new St.Button(
+				 { child : icon1, track_hover : true, style_class : 'cn' });
+			const lbl  = new St.Label();
 			const hbox = new St.BoxLayout();
 			hbox.add_child(butt);
 			hbox.add_child(lbl);
@@ -179,8 +179,8 @@ const Indicator = GObject.registerClass(class Indicator extends PanelMenu.Button
 					self.child = icon1;
 			});
 
-			butt.filename = fname; // additional properties
-			item.filename = fname; // additional properties
+			butt.filename = fname;	// additional properties
+			item.filename = fname;	// additional properties
 			item.connect('activate', (actor) => {
 				owner._clipboard.get_text(
 					St.ClipboardType.PRIMARY, (clipboard, text) => {
@@ -190,8 +190,8 @@ const Indicator = GObject.registerClass(class Indicator extends PanelMenu.Button
 								GLib.file_set_contents(f, 'auto create file.\n');
 							}
 							const ByteArray = imports.byteArray;
-							const r = ByteArray.toString(GLib.file_get_contents(f)[1]);
-							const t = r + '\n------  ' + GLib.DateTime.new_now_local().format('%F %T') + '  ------\n' + text + '\n';
+							const r			= ByteArray.toString(GLib.file_get_contents(f)[1]);
+							const t			= r + '\n------  ' + GLib.DateTime.new_now_local().format('%F %T') + '  ------\n' + text + '\n';
 							GLib.file_set_contents(f, t);
 						}
 					});
@@ -199,7 +199,7 @@ const Indicator = GObject.registerClass(class Indicator extends PanelMenu.Button
 			owner.menu.addMenuItem(item);
 		};
 
-		function ls(path) { // return an array of files
+		function ls(path) {	 // return an array of files
 			const dir = Gio.File.new_for_path(path);
 			let fileEnum;
 			let r = [];
@@ -222,7 +222,7 @@ const Indicator = GObject.registerClass(class Indicator extends PanelMenu.Button
 				'#00193E', '#6196E6', '#42CC53', '#E68061', '#E6617A', '#D361E6'
 			];
 			const seg = str.split('.');
-			let out = '';
+			let out	  = '';
 			seg.forEach((s) => {
 				if (s)
 					out += '  <span background="' + color[(s.length - 1) % color.length] + '"><b> ' + s + ' </b></span>';
